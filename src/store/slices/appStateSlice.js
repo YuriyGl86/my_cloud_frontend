@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { catalogFetchAPI } from '../catalogFetchAPI';
+// import { catalogFetchAPI } from '../catalogFetchAPI';
 
 const initialState = {
     selected: null,
@@ -55,21 +55,21 @@ export const appStateSlice = createSlice({
             state.headerSearch = '';
         },
     },
-    extraReducers: builder => {
-        builder.addMatcher(
-            catalogFetchAPI.endpoints.getCatalogItems.matchFulfilled,
-            (state, { payload }) => {
-                state.haveMoreItems = payload.length === 6;
-                state.loadingMore = false;
-            },
-        );
-        builder.addMatcher(
-            catalogFetchAPI.endpoints.getCatalogItems.matchPending,
-            state => {
-                state.loadingMore = true;
-            },
-        );
-    },
+    // extraReducers: builder => {
+    //     builder.addMatcher(
+    //         catalogFetchAPI.endpoints.getCatalogItems.matchFulfilled,
+    //         (state, { payload }) => {
+    //             state.haveMoreItems = payload.length === 6;
+    //             state.loadingMore = false;
+    //         },
+    //     );
+    //     builder.addMatcher(
+    //         catalogFetchAPI.endpoints.getCatalogItems.matchPending,
+    //         state => {
+    //             state.loadingMore = true;
+    //         },
+    //     );
+    // },
 });
 
 export const appStateActions = appStateSlice.actions;

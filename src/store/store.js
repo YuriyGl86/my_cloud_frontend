@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { catalogFetchAPI } from './catalogFetchAPI';
+import { backendUserAPI } from './backendUserAPI';
 import appStateReducer from './slices/appStateSlice';
 import cartReducer from './slices/cartSlice';
 
@@ -34,10 +34,10 @@ export const store = configureStore({
     reducer: {
         appState: appStateReducer,
         cart: cartReducer,
-        [catalogFetchAPI.reducerPath]: catalogFetchAPI.reducer,
+        [backendUserAPI.reducerPath]: backendUserAPI.reducer,
     },
     middleware: getDefaultMiddleware =>
-        getDefaultMiddleware().concat(catalogFetchAPI.middleware),
+        getDefaultMiddleware().concat(backendUserAPI.middleware),
     devTools: process.env.NODE_ENV !== 'production',
 });
 

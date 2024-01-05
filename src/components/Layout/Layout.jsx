@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-// import { Header } from '../headerComponents/Header/Header';
+import { Header } from '../Header';
 // import { Footer } from '../footerComponents/Footer';
 
 export function Layout() {
@@ -25,14 +25,14 @@ export function Layout() {
 
     return (
         <>
-            {/* <Header
+            <Header
                 menuItems={[
                     menuItems.main,
                     menuItems.catalog,
                     menuItems.about,
                     menuItems.contacts,
                 ]}
-            /> */}
+            />
             <main className="container">
                 <Outlet />
             </main>
