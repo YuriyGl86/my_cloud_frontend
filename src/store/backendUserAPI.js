@@ -7,10 +7,10 @@ import {
 export const backendUserAPI = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.REACT_APP_BACKEND,
-        prepareHeaders: headers => {
-            headers.set('Content-Type', 'application/json');
-            return headers;
-        },
+        // prepareHeaders: headers => {
+        //     headers.set('Content-Type', 'application/json');
+        //     return headers;
+        // },
     }),
     reducerPath: 'api',
     endpoints: builder => ({
@@ -54,9 +54,10 @@ export const backendUserAPI = createApi({
         // }),
         register: builder.mutation({
             query: body => ({
-                url: '/user',
+                url: '/api/v1/auth/users/',
                 method: 'POST',
                 body,
+                headers: { 'Content-Type': 'application/json' },
             }),
         }),
     }),

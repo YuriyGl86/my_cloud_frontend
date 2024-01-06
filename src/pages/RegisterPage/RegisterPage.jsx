@@ -27,7 +27,7 @@ export function RegisterPage() {
                 }}
             >
                 <Form.Item
-                    name="login"
+                    name="username"
                     label="Login"
                     rules={[
                         {
@@ -52,7 +52,7 @@ export function RegisterPage() {
                 </Form.Item>
 
                 <Form.Item
-                    name="fullName"
+                    name="first_name"
                     label="Full Name"
                     rules={[
                         {
