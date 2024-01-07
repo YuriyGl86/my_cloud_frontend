@@ -2,16 +2,16 @@ import {
     createApi,
     defaultSerializeQueryArgs,
     fetchBaseQuery,
+    retry,
 } from '@reduxjs/toolkit/query/react';
 
 export const backendUserAPI = createApi({
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.REACT_APP_BACKEND,
-        // prepareHeaders: headers => {
-        //     headers.set('Content-Type', 'application/json');
-        //     return headers;
-        // },
-    }),
+    baseQuery: retry(
+        fetchBaseQuery({
+            baseUrl: process.env.REACT_APP_BACKEND,
+        }),
+        { maxRetries: 3 },
+    ),
     reducerPath: 'api',
     endpoints: builder => ({
         // getCategories: builder.query({
@@ -60,6 +60,14 @@ export const backendUserAPI = createApi({
                 headers: { 'Content-Type': 'application/json' },
             }),
         }),
+        login: builder.mutation({
+            query: body => ({
+                url: '/auth/token/login/',
+                method: 'POST',
+                body,
+                headers: { 'Content-Type': 'application/json' },
+            }),
+        }),
     }),
 });
 
@@ -69,4 +77,5 @@ export const {
     useGetCatalogItemsQuery,
     useGetCatalogItemDetailsQuery,
     useRegisterMutation,
+    useLoginMutation,
 } = backendUserAPI;
