@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { backendUserAPI } from './backendUserAPI';
-import appStateReducer from './slices/appStateSlice';
+import userReducer from './slices/userSlice';
 import cartReducer from './slices/cartSlice';
 
 // import {
@@ -32,7 +32,7 @@ import cartReducer from './slices/cartSlice';
 
 export const store = configureStore({
     reducer: {
-        appState: appStateReducer,
+        user: userReducer,
         cart: cartReducer,
         [backendUserAPI.reducerPath]: backendUserAPI.reducer,
     },

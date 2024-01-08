@@ -1,30 +1,56 @@
 import React from 'react';
-import { Form, Button, Checkbox, DatePicker, Input, Select, Space } from 'antd';
+import { Form, Button, Checkbox, DatePicker, Input, Select, Space, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useLoginMutation } from '../../store/backendUserAPI';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { userActions } from '../../store/slices/userSlice';
 
 export function LoginPage() {
     const [login, { isLoading, isError, isSuccess, error, data }] = useLoginMutation();
+    const [messageApi, contextHolder] = message.useMessage();
+    const dispatch = useDispatch();
+    const key = 'updatable';
 
     const onFinish = async values => {
         console.log(values);
-
         try {
-            await login(JSON.stringify(values)).unwrap();
+            messageApi.open({
+                key,
+                type: 'loading',
+                content: 'Loading...',
+            });
+            const token = await login(JSON.stringify(values)).unwrap();
+            dispatch(userActions.setToken({ token }));
+            console.log('после запроса');
         } catch (e) {
             console.log(e);
+            messageApi.open({
+                key,
+                type: 'error',
+                content: `Ошибка отправки запроса: ${e.error}`,
+                onClose: () => {
+                    console.log('всеее');
+                },
+            });
         }
     };
 
     useEffect(() => {
         if (isSuccess) {
             console.log(data);
+            messageApi.open({
+                key,
+                type: 'success',
+                content: 'Loaded!',
+                duration: 2,
+            });
         }
     }, [isSuccess]);
 
     return (
         <div className="register-form-container login-form">
+            {contextHolder}
             <Form
                 name="normal_login"
                 className="login-form"

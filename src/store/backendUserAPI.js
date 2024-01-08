@@ -10,7 +10,7 @@ export const backendUserAPI = createApi({
         fetchBaseQuery({
             baseUrl: process.env.REACT_APP_BACKEND,
         }),
-        { maxRetries: 3 },
+        { maxRetries: 0 },
     ),
     reducerPath: 'api',
     endpoints: builder => ({
