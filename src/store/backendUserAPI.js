@@ -68,14 +68,10 @@ export const backendUserAPI = createApi({
                 headers: { 'Content-Type': 'application/json' },
             }),
         }),
+        getUsers: builder.query({
+            query: () => `/api/v1/auth/users/`,
+        }),
     }),
 });
 
-export const {
-    useGetCategoriesQuery,
-    useGetHitsQuery,
-    useGetCatalogItemsQuery,
-    useGetCatalogItemDetailsQuery,
-    useRegisterMutation,
-    useLoginMutation,
-} = backendUserAPI;
+export const { useGetUsersQuery, useRegisterMutation, useLoginMutation } = backendUserAPI;

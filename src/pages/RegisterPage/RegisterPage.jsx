@@ -1,15 +1,28 @@
 import React from 'react';
-import { Form, Button, Checkbox, DatePicker, Input, Select, Space } from 'antd';
+import { Form, Button, Checkbox, DatePicker, Input, Select, Space, message } from 'antd';
 import { useRegisterMutation } from '../../store/backendUserAPI';
+import { useNavigate } from 'react-router-dom';
 
 export function RegisterPage() {
     const [register, { isLoading, isError, isSuccess, error }] = useRegisterMutation();
+    const navigate = useNavigate();
+    const [messageApi, contextHolder] = message.useMessage();
+    const key = 'updatable';
 
     const handleSubmit = async values => {
         console.log(values);
 
         try {
             await register(JSON.stringify(values)).unwrap();
+            messageApi.open({
+                key,
+                type: 'success',
+                content: `Successfully registered!`,
+                duration: 2,
+                onClose: () => {
+                    navigate('/login', { replace: true });
+                },
+            });
         } catch (e) {
             console.log(e);
         }
@@ -17,6 +30,7 @@ export function RegisterPage() {
 
     return (
         <div className="register-form-container">
+            {contextHolder}
             <Form
                 autoComplete="off"
                 labelCol={{ span: 10 }}

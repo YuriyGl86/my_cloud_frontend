@@ -5,6 +5,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { StoragePage } from './pages/StoragePage';
+import { AdminUserPage } from './pages/AdminUserPage';
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/storage" element={<StoragePage />} />
+                <Route path="/admin-users" element={<AdminUserPage />} />
                 {/* <Route path="/contacts" element={<ContactsPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/catalog/:id" element={<CatalogItemPage />} />

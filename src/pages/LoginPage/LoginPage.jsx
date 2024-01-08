@@ -5,48 +5,42 @@ import { useLoginMutation } from '../../store/backendUserAPI';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../store/slices/userSlice';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function LoginPage() {
     const [login, { isLoading, isError, isSuccess, error, data }] = useLoginMutation();
     const [messageApi, contextHolder] = message.useMessage();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const key = 'updatable';
 
     const onFinish = async values => {
-        console.log(values);
         try {
-            messageApi.open({
-                key,
-                type: 'loading',
-                content: 'Loading...',
-            });
             const token = await login(JSON.stringify(values)).unwrap();
-            dispatch(userActions.setToken({ token }));
-            console.log('после запроса');
-        } catch (e) {
-            console.log(e);
-            messageApi.open({
-                key,
-                type: 'error',
-                content: `Ошибка отправки запроса: ${e.error}`,
-                onClose: () => {
-                    console.log('всеее');
-                },
-            });
-        }
-    };
-
-    useEffect(() => {
-        if (isSuccess) {
-            console.log(data);
+            dispatch(userActions.setToken({ token: token.auth_token }));
+            console.log(token);
             messageApi.open({
                 key,
                 type: 'success',
-                content: 'Loaded!',
+                content: `Successfully authenticated!`,
                 duration: 2,
+                onClose: () => {
+                    navigate('/storage', { replace: true });
+                },
+            });
+        } catch (e) {
+            const content =
+                e.status === 400
+                    ? 'Неверный пароль'
+                    : `Ошибка аутентификации: ${e.error}`;
+
+            messageApi.open({
+                key,
+                type: 'error',
+                content,
             });
         }
-    }, [isSuccess]);
+    };
 
     return (
         <div className="register-form-container login-form">
@@ -82,10 +76,11 @@ export function LoginPage() {
                         type="primary"
                         htmlType="submit"
                         className="login-form-button"
+                        loading={isLoading}
                     >
                         Log in
                     </Button>
-                    Or <a href="">register now!</a>
+                    Or <Link to="/register">register now!</Link>
                 </Form.Item>
             </Form>
         </div>
