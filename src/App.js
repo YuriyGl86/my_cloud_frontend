@@ -14,7 +14,7 @@ function App() {
                 <Route index element={<HomePage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/storage" element={<StoragePage />} />
+                <Route path="/storage/" element={<StoragePage />} />
                 <Route path="/admin-users" element={<AdminUserPage />} />
                 {/* <Route path="/contacts" element={<ContactsPage />} />
                 <Route path="/cart" element={<CartPage />} />

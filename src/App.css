@@ -20,3 +20,26 @@
 .login-form-button {
     width: 100%;
 }
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.content-container {
+    max-width: 70%;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 30px;
+}
+
+.upload-form {
+    /* min-height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}

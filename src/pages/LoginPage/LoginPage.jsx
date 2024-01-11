@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Checkbox, DatePicker, Input, Select, Space, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useLoginMutation } from '../../store/backendUserAPI';
+import { useGetUserInfoQuery, useLoginMutation } from '../../store/backendUserAPI';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../store/slices/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import { skipToken } from '@reduxjs/toolkit/query';
+import { useAuth } from '../../hooks/useAuth';
 
 export function LoginPage() {
-    const [login, { isLoading, isError, isSuccess, error, data }] = useLoginMutation();
     const [messageApi, contextHolder] = message.useMessage();
+    const { isAuth } = useAuth();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [login, { isLoading, isError, isSuccess, error, data }] = useLoginMutation();
+
+    const [tokenReceived, setTokenReceived] = useState(skipToken);
+    useGetUserInfoQuery(tokenReceived); // Результат запроса перехватывается в extraReducers в userSlice и сохраняется в стор
+
     const key = 'updatable';
 
     const onFinish = async values => {
@@ -19,6 +27,7 @@ export function LoginPage() {
             const token = await login(JSON.stringify(values)).unwrap();
             dispatch(userActions.setToken({ token: token.auth_token }));
             console.log(token);
+            setTokenReceived(token.auth_token);
             messageApi.open({
                 key,
                 type: 'success',
@@ -58,6 +67,7 @@ export function LoginPage() {
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
                         placeholder="Username"
+                        autoComplete="on"
                     />
                 </Form.Item>
                 <Form.Item
@@ -68,6 +78,7 @@ export function LoginPage() {
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
                         placeholder="Password"
+                        autoComplete="off"
                     />
                 </Form.Item>
 

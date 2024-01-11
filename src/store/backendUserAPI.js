@@ -24,11 +24,11 @@ export const backendUserAPI = createApi({
         //     query: ({ selected, q, offset }) => {
         //         return {
         //             url: '/items',
-        //             params: {
-        //                 ...(selected && { categoryId: selected }),
-        //                 ...(q && { q }),
-        //                 ...(offset && { offset }),
-        //             },
+        // params: {
+        //     ...(selected && { categoryId: selected }),
+        //     ...(q && { q }),
+        //     ...(offset && { offset }),
+        // },
         //         };
         //     },
         //     keepUnusedDataFor: 0,
@@ -68,10 +68,51 @@ export const backendUserAPI = createApi({
                 headers: { 'Content-Type': 'application/json' },
             }),
         }),
-        getUsers: builder.query({
-            query: () => `/api/v1/auth/users/`,
+        logout: builder.mutation({
+            query: token => ({
+                url: '/auth/token/logout/',
+                method: 'POST',
+                headers: { Authorization: `Token ${token}` },
+            }),
+        }),
+        getUserInfo: builder.query({
+            query: token => {
+                return {
+                    url: `/api/v1/auth/users/me`,
+                    headers: { Authorization: `Token ${token}` },
+                };
+            },
+        }),
+        getFiles: builder.query({
+            query: ({ token, id }) => {
+                return {
+                    url: `/api/v1/files/`,
+                    headers: { Authorization: `Token ${token}` },
+                    params: {
+                        ...(id && { id }),
+                    },
+                };
+            },
+        }),
+        sendFile: builder.mutation({
+            query: ({ body, token }) => ({
+                url: '/api/v1/files/',
+                method: 'POST',
+                body,
+                headers: {
+                    Authorization: `Token ${token}`,
+                },
+                formData: true,
+            }),
         }),
     }),
 });
 
-export const { useGetUsersQuery, useRegisterMutation, useLoginMutation } = backendUserAPI;
+export const {
+    useRegisterMutation,
+    useLoginMutation,
+    useLogoutMutation,
+    useGetUserInfoQuery,
+    useGetFilesQuery,
+    useSendFileMutation,
+} = backendUserAPI;

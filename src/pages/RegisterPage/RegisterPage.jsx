@@ -116,7 +116,7 @@ export function RegisterPage() {
                     ]}
                     hasFeedback
                 >
-                    <Input.Password placeholder="Придумайте пароль" />
+                    <Input.Password placeholder="Придумайте пароль" autoComplete="off" />
                 </Form.Item>
 
                 <Form.Item
@@ -138,7 +138,7 @@ export function RegisterPage() {
                     ]}
                     hasFeedback
                 >
-                    <Input.Password placeholder="Подтвердите пароль" />
+                    <Input.Password placeholder="Подтвердите пароль" autoComplete="off" />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 24 }}>
