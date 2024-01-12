@@ -11,7 +11,7 @@ import {
 import { skipToken } from '@reduxjs/toolkit/query';
 import { UploadFile } from '../../components/UploadFile/UploadFile';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export function StoragePage({ id }) {
     const { isAuth, username, token } = useAuth();
@@ -52,8 +52,10 @@ export function StoragePage({ id }) {
                 }
                 className="demo-loadmore-list"
                 loading={isLoading}
+                bordered
                 itemLayout="horizontal"
                 dataSource={data}
+                size="small"
                 renderItem={item => (
                     <List.Item
                         actions={[
@@ -65,25 +67,21 @@ export function StoragePage({ id }) {
                             </Tooltip>,
                         ]}
                     >
-                        <Skeleton avatar title={false} loading={isLoading} active>
-                            <List.Item.Meta
-                                title={
-                                    <Link to={`/`}>
-                                        <Title
-                                            level={4}
-                                            editable={{
-                                                onChange: newName => {
-                                                    handleEditFileName(newName, item.id);
-                                                },
-                                            }}
-                                        >
-                                            {item.name}
-                                        </Title>
-                                    </Link>
-                                }
-                                description={`uploaded_at: ${item.uploaded_at},   size: ${item.size},   comment: ${item.comment}`}
-                            />
-                        </Skeleton>
+                        <List.Item.Meta
+                            title={
+                                <Text
+                                    editable={{
+                                        onChange: newName => {
+                                            handleEditFileName(newName, item.id);
+                                        },
+                                        triggerType: ['icon', 'text'],
+                                    }}
+                                >
+                                    {item.name}
+                                </Text>
+                            }
+                            description={`uploaded_at: ${item.uploaded_at},   size: ${item.size},   comment: ${item.comment}`}
+                        />
                     </List.Item>
                 )}
             />
