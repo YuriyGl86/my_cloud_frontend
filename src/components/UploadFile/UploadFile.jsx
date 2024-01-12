@@ -9,18 +9,14 @@ export function UploadFile() {
 
     const [sendFile, { isLoading, isError, isSuccess, error }] = useSendFileMutation();
 
-    const onFinish = values => {
-        console.log(values);
-        const { comment, upload } = values;
-        const data = { comment, file: upload[0].originFileObj };
-        console.log(data);
+    const onFinish = ({ comment, upload, rename }) => {
+        const data = { comment, file: upload[0].originFileObj, rename };
         const formData = new FormData();
-
         for (const name in data) {
             formData.append(name, data[name]);
         }
         try {
-            sendFile({ token, body: formData });
+            sendFile({ token, body: formData }).unwrap();
         } catch (e) {
             console.log(e);
         }
@@ -42,12 +38,25 @@ export function UploadFile() {
                 onFinish={onFinish}
             >
                 <Form.Item
+                    name="rename"
+                    rules={[{ required: false, message: 'Please input comment here' }]}
+                    label="File name"
+                >
+                    <Input
+                        prefix={<UserOutlined className="site-form-item-icon" />}
+                        placeholder="if you want to rename"
+                        autoComplete="off"
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="Comment"
                     name="comment"
                     rules={[{ required: false, message: 'Please input comment here' }]}
                 >
                     <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
-                        placeholder="comment"
+                        placeholder="type comment here"
                         autoComplete="off"
                     />
                 </Form.Item>
@@ -65,7 +74,7 @@ export function UploadFile() {
                         }}
                         showUploadList={{ downloadIcon: false }}
                     >
-                        <Button icon={<UploadOutlined />}>Click to add</Button>
+                        <Button icon={<UploadOutlined />}>Choose file</Button>
                     </Upload>
                 </Form.Item>
 

@@ -13,45 +13,8 @@ export const backendUserAPI = createApi({
         { maxRetries: 0 },
     ),
     reducerPath: 'api',
+    tagTypes: ['Files', 'Users'],
     endpoints: builder => ({
-        // getCategories: builder.query({
-        //     query: () => `/categories`,
-        // }),
-        // getHits: builder.query({
-        //     query: () => `/top-sales`,
-        // }),
-        // getCatalogItems: builder.query({
-        //     query: ({ selected, q, offset }) => {
-        //         return {
-        //             url: '/items',
-        // params: {
-        //     ...(selected && { categoryId: selected }),
-        //     ...(q && { q }),
-        //     ...(offset && { offset }),
-        // },
-        //         };
-        //     },
-        //     keepUnusedDataFor: 0,
-        //     serializeQueryArgs: ({ queryArgs, endpointDefinition, endpointName }) => {
-        //         // Для себя: исключаем из ключа кэширования offset
-        //         const { selected, q } = queryArgs;
-        //         return defaultSerializeQueryArgs({
-        //             endpointName,
-        //             queryArgs: { selected, q },
-        //             endpointDefinition,
-        //         });
-        //     },
-        //     merge: (currentCache, newItems) => {
-        //         // Для себя: данные нового запроса пушим к данным прошлых
-        //         currentCache.push(...newItems);
-        //     },
-        //     forceRefetch({ currentArg, previousArg }) {
-        //         return currentArg !== previousArg;
-        //     },
-        // }),
-        // getCatalogItemDetails: builder.query({
-        //     query: id => `/items/${id}`,
-        // }),
         register: builder.mutation({
             query: body => ({
                 url: '/api/v1/auth/users/',
@@ -93,6 +56,7 @@ export const backendUserAPI = createApi({
                     },
                 };
             },
+            providesTags: ['Files'],
         }),
         sendFile: builder.mutation({
             query: ({ body, token }) => ({
@@ -104,6 +68,41 @@ export const backendUserAPI = createApi({
                 },
                 formData: true,
             }),
+            invalidatesTags: ['Files'],
+        }),
+        getUsers: builder.query({
+            query: token => {
+                return {
+                    url: `/api/v1/auth/users/`,
+                    headers: { Authorization: `Token ${token}` },
+                };
+            },
+            providesTags: ['Users'],
+        }),
+        deleteFile: builder.mutation({
+            query: ({ id, token }) => ({
+                url: `/api/v1/files/${id}`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Token ${token}`,
+                },
+            }),
+            invalidatesTags: ['Files'],
+        }),
+        editFileName: builder.mutation({
+            query: ({ id, token, body }) => {
+                console.log(body);
+                return {
+                    url: `/api/v1/files/${id}/`,
+                    method: 'PATCH',
+                    body,
+                    headers: {
+                        Authorization: `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                };
+            },
+            invalidatesTags: ['Files'],
         }),
     }),
 });
@@ -115,4 +114,7 @@ export const {
     useGetUserInfoQuery,
     useGetFilesQuery,
     useSendFileMutation,
+    useGetUsersQuery,
+    useDeleteFileMutation,
+    useEditFileNameMutation,
 } = backendUserAPI;

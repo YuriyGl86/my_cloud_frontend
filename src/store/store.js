@@ -1,61 +1,52 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { backendUserAPI } from './backendUserAPI';
 import userReducer from './slices/userSlice';
-import cartReducer from './slices/cartSlice';
 
-// import {
-//     persistStore,
-//     persistReducer,
-//     FLUSH,
-//     REHYDRATE,
-//     PAUSE,
-//     PERSIST,
-//     PURGE,
-//     REGISTER,
-// } from 'redux-persist';
-// import storage from 'redux-persist/lib/storage';
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-// const persistConfig = {
-//     key: 'cart',
-//     storage,
-//     whitelist: ['cart'],
-//     blacklist: [catalogFetchAPI.reducerPath],
-// };
+const persistConfig = {
+    key: 'user',
+    storage,
+    whitelist: ['user'],
+    blacklist: [backendUserAPI.reducerPath],
+};
 
-// const rootReducer = combineReducers({
-//     appState: appStateReducer,
-//     cart: cartReducer,
-//     [catalogFetchAPI.reducerPath]: catalogFetchAPI.reducer,
-// });
-
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-export const store = configureStore({
-    reducer: {
-        user: userReducer,
-        cart: cartReducer,
-        [backendUserAPI.reducerPath]: backendUserAPI.reducer,
-    },
-    middleware: getDefaultMiddleware =>
-        getDefaultMiddleware().concat(backendUserAPI.middleware),
-    devTools: process.env.NODE_ENV !== 'production',
+const rootReducer = combineReducers({
+    user: userReducer,
+    [backendUserAPI.reducerPath]: backendUserAPI.reducer,
 });
 
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 // export const store = configureStore({
-//     reducer: persistedReducer,
+//     reducer: {
+//         user: userReducer,
+//         cart: cartReducer,
+//         [backendUserAPI.reducerPath]: backendUserAPI.reducer,
+//     },
 //     middleware: getDefaultMiddleware =>
-//         getDefaultMiddleware({
-//             serializableCheck: {
-//                 ignoredActions: [
-//                     FLUSH,
-//                     REHYDRATE,
-//                     PAUSE,
-//                     PERSIST,
-//                     PURGE,
-//                     REGISTER,
-//                 ],
-//             },
-//         }).concat(catalogFetchAPI.middleware),
+//         getDefaultMiddleware().concat(backendUserAPI.middleware),
+//     devTools: process.env.NODE_ENV !== 'production',
 // });
 
-// export const persistor = persistStore(store);
+export const store = configureStore({
+    reducer: persistedReducer,
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }).concat(backendUserAPI.middleware),
+});
+
+export const persistor = persistStore(store);
