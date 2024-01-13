@@ -99,6 +99,14 @@ export const backendUserAPI = createApi({
             },
             invalidatesTags: ['Files'],
         }),
+        getFile: builder.query({
+            query: ({ token, id }) => {
+                return {
+                    url: `/api/v1/files/${id}/`,
+                    headers: { Authorization: `Token ${token}` },
+                };
+            },
+        }),
     }),
 });
 
@@ -112,4 +120,5 @@ export const {
     useGetUsersQuery,
     useDeleteFileMutation,
     useEditFileMutation,
+    useGetFileQuery,
 } = backendUserAPI;
