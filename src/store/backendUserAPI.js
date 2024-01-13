@@ -1,9 +1,4 @@
-import {
-    createApi,
-    defaultSerializeQueryArgs,
-    fetchBaseQuery,
-    retry,
-} from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react';
 
 export const backendUserAPI = createApi({
     baseQuery: retry(
@@ -89,7 +84,7 @@ export const backendUserAPI = createApi({
             }),
             invalidatesTags: ['Files'],
         }),
-        editFileName: builder.mutation({
+        editFile: builder.mutation({
             query: ({ id, token, body }) => {
                 console.log(body);
                 return {
@@ -116,5 +111,5 @@ export const {
     useSendFileMutation,
     useGetUsersQuery,
     useDeleteFileMutation,
-    useEditFileNameMutation,
+    useEditFileMutation,
 } = backendUserAPI;

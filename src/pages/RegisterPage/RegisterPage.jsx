@@ -1,10 +1,10 @@
 import React from 'react';
-import { Form, Button, Checkbox, DatePicker, Input, Select, Space, message } from 'antd';
+import { Form, Button, Input, message } from 'antd';
 import { useRegisterMutation } from '../../store/backendUserAPI';
 import { useNavigate } from 'react-router-dom';
 
 export function RegisterPage() {
-    const [register, { isLoading, isError, isSuccess, error }] = useRegisterMutation();
+    const [register] = useRegisterMutation();
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
     const key = 'updatable';

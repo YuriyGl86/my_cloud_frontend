@@ -7,7 +7,7 @@ import { useLogoutMutation } from '../../store/backendUserAPI';
 
 export function NavButtons() {
     const { isAuth, username, token, is_staff } = useAuth();
-    const [logout, { isLoading, isError, isSuccess, error, data }] = useLogoutMutation();
+    const [logout] = useLogoutMutation();
     const dispatch = useDispatch();
 
     const handleLogClick = async e => {

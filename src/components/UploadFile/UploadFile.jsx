@@ -1,13 +1,14 @@
 import React from 'react';
-import { Form, Button, Upload, DatePicker, Input, Select, Space, message } from 'antd';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Button, Upload, Input, Typography } from 'antd';
+import { UploadOutlined, EditOutlined, CommentOutlined } from '@ant-design/icons';
 import { useAuth } from '../../hooks/useAuth';
 import { useSendFileMutation } from '../../store/backendUserAPI';
+const { Title } = Typography;
 
 export function UploadFile() {
-    const { isAuth, username, token, is_staff } = useAuth();
+    const { token } = useAuth();
 
-    const [sendFile, { isLoading, isError, isSuccess, error }] = useSendFileMutation();
+    const [sendFile] = useSendFileMutation();
 
     const onFinish = ({ comment, upload, rename }) => {
         const data = { comment, file: upload[0].originFileObj, rename };
@@ -31,6 +32,7 @@ export function UploadFile() {
 
     return (
         <div className="upload-form">
+            <Title level={4}> Upload new file:</Title>
             {/* {contextHolder} */}
             <Form
                 name="upload_file"
@@ -43,7 +45,7 @@ export function UploadFile() {
                     label="File name"
                 >
                     <Input
-                        prefix={<UserOutlined className="site-form-item-icon" />}
+                        prefix={<EditOutlined className="site-form-item-icon" />}
                         placeholder="if you want to rename"
                         autoComplete="off"
                     />
@@ -55,7 +57,7 @@ export function UploadFile() {
                     rules={[{ required: false, message: 'Please input comment here' }]}
                 >
                     <Input
-                        prefix={<UserOutlined className="site-form-item-icon" />}
+                        prefix={<CommentOutlined className="site-form-item-icon" />}
                         placeholder="type comment here"
                         autoComplete="off"
                     />

@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
-import { Button, Typography } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import React from 'react';
+import { Typography } from 'antd';
+
 import { NavButtons } from '../../components/NavButtons/NavButtons';
 
 const { Title, Paragraph, Text } = Typography;
 
 export function HomePage() {
-    const { isAuth, username, token } = useAuth();
-    const navigate = useNavigate();
-
     return (
         <>
             <div className="content-container">

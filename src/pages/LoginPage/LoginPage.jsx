@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-import { Form, Button, Checkbox, DatePicker, Input, Select, Space, message } from 'antd';
+import { Form, Button, Input, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useGetUserInfoQuery, useLoginMutation } from '../../store/backendUserAPI';
-import { useEffect } from 'react';
+
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../store/slices/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { skipToken } from '@reduxjs/toolkit/query';
-import { useAuth } from '../../hooks/useAuth';
 
 export function LoginPage() {
     const [messageApi, contextHolder] = message.useMessage();
-    const { isAuth } = useAuth();
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [login, { isLoading, isError, isSuccess, error, data }] = useLoginMutation();
+    const [login, { isLoading }] = useLoginMutation();
 
     const [tokenReceived, setTokenReceived] = useState(skipToken);
     useGetUserInfoQuery(tokenReceived); // Результат запроса перехватывается в extraReducers в userSlice и сохраняется в стор

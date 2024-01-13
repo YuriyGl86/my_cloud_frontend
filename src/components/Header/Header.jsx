@@ -1,14 +1,8 @@
 import React from 'react';
 import { PageHeader } from '@ant-design/pro-layout';
-import { Button, Typography } from 'antd';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { useDispatch } from 'react-redux';
-import { userActions } from '../../store/slices/userSlice';
-import { useLogoutMutation } from '../../store/backendUserAPI';
-import { NavButtons } from '../NavButtons/NavButtons';
 
-const { Title, Paragraph } = Typography;
+import { NavButtons } from '../NavButtons/NavButtons';
 
 export function Header() {
     return (
