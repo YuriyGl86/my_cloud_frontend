@@ -13,7 +13,6 @@ import {
 import {
     useDeleteFileMutation,
     useEditFileMutation,
-    useGetFileQuery,
     useGetFilesQuery,
 } from '../../store/backendUserAPI';
 import { skipToken } from '@reduxjs/toolkit/query';
@@ -29,6 +28,7 @@ const { Title, Text } = Typography;
 //         size: '1234567',
 //         comment: 'fqfqfqwfqwfqwfqwf',
 //         uploaded_at: '12/12/12 12:12:12',
+//         file: 'https://ya.ru/',
 //     },
 //     {
 //         name: '1111',
@@ -36,6 +36,7 @@ const { Title, Text } = Typography;
 //         size: '1234567',
 //         comment: 'fqfqfqwfqwfqwfqwf',
 //         uploaded_at: '12/12/12 12:12:12',
+//         file: 'https://ya.ru/',
 //     },
 // ];
 
@@ -44,10 +45,7 @@ export function StoragePage({ id }) {
     const navigate = useNavigate();
     const locationState = useLocation().state;
 
-    // const [params, setParams] = useState();
-
     const { data, isLoading } = useGetFilesQuery({ token, id } || skipToken);
-    // const { data: dataFile, isSuccess } = useGetFileQuery(params || skipToken);
     const [deleteFile] = useDeleteFileMutation();
     const [rename] = useEditFileMutation();
 
@@ -61,33 +59,29 @@ export function StoragePage({ id }) {
 
     const handleDeleteFile = async id => {
         try {
-            deleteFile({ token, id }).unwrap();
+            await deleteFile({ token, id }).unwrap();
         } catch (e) {
             console.log(e);
         }
     };
 
-    const handleEditFileName = (newName, id) => {
-        console.log(newName, id);
+    const handleEditFileName = async (newName, id) => {
         try {
-            rename({ token, id, body: { name: newName } }).unwrap();
+            await rename({ token, id, body: { name: newName } }).unwrap();
         } catch (e) {
             console.log(e);
         }
     };
 
-    const handleEditComment = (newComment, id) => {
-        console.log(newComment, id);
+    const handleEditComment = async (newComment, id) => {
         try {
-            rename({ token, id, body: { comment: newComment } }).unwrap();
+            await rename({ token, id, body: { comment: newComment } }).unwrap();
         } catch (e) {
             console.log(e);
         }
     };
 
     const handleDownloadFile = id => {
-        console.log('qdqdwqd');
-
         let filename = '';
         fetch(`http://127.0.0.1:8000/api/v1/files/${id}/`, {
             headers: {
@@ -110,11 +104,8 @@ export function StoragePage({ id }) {
                 document.body.appendChild(link);
                 link.click();
                 link.parentNode.removeChild(link);
-            });
-    };
-
-    const handleShareFile = id => {
-        console.log('download  ', id);
+            })
+            .catch(console.log);
     };
 
     return (
@@ -135,16 +126,23 @@ export function StoragePage({ id }) {
                     <List.Item
                         extra={[
                             <Space key="buttons">
-                                <Tooltip title="Share file link" key="share">
-                                    <Button
-                                        icon={
-                                            <ShareAltOutlined
-                                                style={{ color: 'rgb(22, 119, 255)' }}
-                                            />
-                                        }
-                                        onClick={() => handleShareFile(item.id)}
-                                    />
-                                </Tooltip>
+                                <Text
+                                    copyable={{
+                                        tooltips: ['copy file link', 'copied'],
+                                        text: `${item.file}`,
+                                        icon: [
+                                            <Button
+                                                icon={
+                                                    <ShareAltOutlined
+                                                        style={{
+                                                            color: 'rgb(22, 119, 255)',
+                                                        }}
+                                                    />
+                                                }
+                                            />,
+                                        ],
+                                    }}
+                                ></Text>
 
                                 <Tooltip title="Download file" key="download">
                                     <Button

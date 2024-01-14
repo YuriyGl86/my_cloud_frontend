@@ -1,5 +1,5 @@
-import React from 'react';
-import { Form, Button, Upload, Input, Typography } from 'antd';
+import React, { useState } from 'react';
+import { Form, Button, Upload, Input, Typography, message } from 'antd';
 import { UploadOutlined, EditOutlined, CommentOutlined } from '@ant-design/icons';
 import { useAuth } from '../../hooks/useAuth';
 import { useSendFileMutation } from '../../store/backendUserAPI';
@@ -10,18 +10,51 @@ export function UploadFile() {
 
     const [sendFile] = useSendFileMutation();
 
-    const onFinish = ({ comment, upload, rename }) => {
-        const data = { comment, file: upload[0].originFileObj, rename };
+    const [fileList, setFileList] = useState([]);
+    const [uploading, setUploading] = useState(false);
+
+    const onFinish = async ({ comment, rename }) => {
         const formData = new FormData();
+        const data = { file: fileList[0], comment, rename };
         for (const name in data) {
             formData.append(name, data[name]);
         }
+        setUploading(true);
         try {
-            sendFile({ token, body: formData }).unwrap();
+            await sendFile({ token, body: formData }).unwrap();
+            setFileList([]);
+            message.success('upload successfully.');
         } catch (e) {
             console.log(e);
+            message.error('upload failed.');
+        } finally {
+            setUploading(false);
         }
     };
+    const props = {
+        onRemove: () => {
+            setFileList([]);
+        },
+        beforeUpload: file => {
+            setFileList([file]);
+            return false;
+        },
+        fileList,
+        maxCount: 1,
+    };
+
+    // const onFinish = async ({ comment, upload, rename }) => {
+    //     const data = { comment, file: upload[0].originFileObj, rename };
+    //     const formData = new FormData();
+    //     for (const name in data) {
+    //         formData.append(name, data[name]);
+    //     }
+    //     try {
+    //         await sendFile({ token, body: formData }).unwrap();
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // };
 
     const normFile = e => {
         if (Array.isArray(e)) {
@@ -68,24 +101,19 @@ export function UploadFile() {
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
                 >
-                    <Upload
-                        name="file"
-                        listType="picture"
-                        customRequest={info => {
-                            console.log(info);
-                        }}
-                        showUploadList={{ downloadIcon: false }}
-                    >
+                    <Upload name="file" {...props}>
                         <Button icon={<UploadOutlined />}>Choose file</Button>
                     </Upload>
                 </Form.Item>
 
                 <Form.Item>
                     <Button
+                        disabled={fileList.length === 0}
+                        block
                         type="primary"
                         htmlType="submit"
                         className="login-form-button"
-                        loading={false}
+                        loading={uploading}
                     >
                         Upload
                     </Button>
