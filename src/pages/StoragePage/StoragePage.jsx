@@ -18,6 +18,7 @@ import {
 import { skipToken } from '@reduxjs/toolkit/query';
 import { UploadFile } from '../../components/UploadFile';
 import { IconText } from '../../components/IconText';
+import moment from 'moment';
 
 const { Title, Text } = Typography;
 
@@ -27,16 +28,18 @@ const { Title, Text } = Typography;
 //         id: '12',
 //         size: '1234567',
 //         comment: 'fqfqfqwfqwfqwfqwf',
-//         uploaded_at: '12/12/12 12:12:12',
+//         uploaded_at: '2015-02-11T00:00:00.000Z',
 //         file: 'https://ya.ru/',
+//         last_download: '2015-02-11T00:00:00.000Z',
 //     },
 //     {
 //         name: '1111',
 //         id: '12',
 //         size: '1234567',
 //         comment: 'fqfqfqwfqwfqwfqwf',
-//         uploaded_at: '12/12/12 12:12:12',
+//         uploaded_at: '2015-02-11T00:00:00.000Z',
 //         file: 'https://ya.ru/',
+//         last_download: '2015-02-11T00:00:00.000Z',
 //     },
 // ];
 
@@ -83,7 +86,7 @@ export function StoragePage({ id }) {
 
     const handleDownloadFile = id => {
         let filename = '';
-        fetch(`http://127.0.0.1:8000/api/v1/files/${id}/`, {
+        fetch(process.env.REACT_APP_BACKEND + `/api/v1/files/${id}/`, {
             headers: {
                 Authorization: `Token ${token}`,
             },
@@ -166,7 +169,9 @@ export function StoragePage({ id }) {
                         actions={[
                             <IconText
                                 icon={<CloudUploadOutlined />}
-                                text={`uploaded at: ${item.uploaded_at}`}
+                                text={`uploaded at: ${moment(item.uploaded_at).format(
+                                    'DD/MM/YYYY  hh:mm:ss',
+                                )}`}
                                 key="upload"
                             />,
                             <IconText
@@ -178,7 +183,9 @@ export function StoragePage({ id }) {
                                 icon={<CloudDownloadOutlined />}
                                 text={
                                     item.last_download
-                                        ? `Last download: ${item.last_download}`
+                                        ? `Last download: ${moment(
+                                              item.last_download,
+                                          ).format('DD/MM/YYYY  hh:mm:ss')}`
                                         : 'No downloads'
                                 }
                                 key="download"

@@ -82,11 +82,10 @@ export const backendUserAPI = createApi({
                     Authorization: `Token ${token}`,
                 },
             }),
-            invalidatesTags: ['Files'],
+            invalidatesTags: ['Files', 'Users'],
         }),
         editFile: builder.mutation({
             query: ({ id, token, body }) => {
-                console.log(body);
                 return {
                     url: `/api/v1/files/${id}/`,
                     method: 'PATCH',
@@ -98,6 +97,30 @@ export const backendUserAPI = createApi({
                 };
             },
             invalidatesTags: ['Files'],
+        }),
+        editUser: builder.mutation({
+            query: ({ id, token, body }) => {
+                return {
+                    url: `/api/v1/auth/users/${id}/`,
+                    method: 'PATCH',
+                    body,
+                    headers: {
+                        Authorization: `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                };
+            },
+            invalidatesTags: ['Users'],
+        }),
+        deleteUser: builder.mutation({
+            query: ({ id, token }) => ({
+                url: `/api/v1/auth/users/${id}/`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Token ${token}`,
+                },
+            }),
+            invalidatesTags: ['Users'],
         }),
     }),
 });
@@ -112,4 +135,6 @@ export const {
     useGetUsersQuery,
     useDeleteFileMutation,
     useEditFileMutation,
+    useEditUserMutation,
+    useDeleteUserMutation,
 } = backendUserAPI;

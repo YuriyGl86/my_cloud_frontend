@@ -77,7 +77,16 @@ export function UploadFile() {
             >
                 <Form.Item
                     name="rename"
-                    rules={[{ required: false, message: 'Please input comment here' }]}
+                    rules={[
+                        {
+                            validator: (_, value) =>
+                                (value && !!value.match(/^[^\\/:\*\?\"<>\|]+$/)) | !value
+                                    ? Promise.resolve()
+                                    : Promise.reject(
+                                          'нельзя использовать символы  / : * ? " < > |',
+                                      ),
+                        },
+                    ]}
                     label="File name"
                 >
                     <Input
@@ -103,6 +112,12 @@ export function UploadFile() {
                     label="File to Upload"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Нельзя загрузить файл, не выбрав его',
+                        },
+                    ]}
                 >
                     <Upload name="file" {...props}>
                         <Button icon={<UploadOutlined />}>Choose file</Button>

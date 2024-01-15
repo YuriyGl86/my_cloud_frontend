@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
-import { useGetUsersQuery } from '../../store/backendUserAPI';
+import {
+    useDeleteUserMutation,
+    useEditUserMutation,
+    useGetUsersQuery,
+} from '../../store/backendUserAPI';
 import { useAuth } from '../../hooks/useAuth';
 
 import { useNavigate, Link } from 'react-router-dom';
@@ -10,6 +14,10 @@ import {
     FileOutlined,
     UserOutlined,
     CloudUploadOutlined,
+    DeleteOutlined,
+    EditFilled,
+    EditOutlined,
+    RetweetOutlined,
 } from '@ant-design/icons';
 import { IconText } from '../../components/IconText';
 
@@ -39,6 +47,8 @@ const { Title } = Typography;
 export function AdminUserPage() {
     const { isAuth, username, token, is_staff } = useAuth();
     const { data, isLoading } = useGetUsersQuery(token);
+    const [editUser] = useEditUserMutation();
+    const [deleteUser] = useDeleteUserMutation();
 
     const navigate = useNavigate();
 
@@ -51,6 +61,17 @@ export function AdminUserPage() {
 
     const handleDeleteUser = async id => {
         try {
+            await deleteUser({ token, id }).unwrap();
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleEditUser = async id => {
+        const is_staff_new = is_staff ? false : true;
+
+        try {
+            await editUser({ token, id, body: { is_staff: is_staff_new } }).unwrap();
         } catch (e) {
             console.log(e);
         }
@@ -67,7 +88,7 @@ export function AdminUserPage() {
                 <List.Item
                     extra={[
                         <Space key="buttons">
-                            <Tooltip title="Delete file" key="delete">
+                            <Tooltip title="Delete user">
                                 <Button
                                     icon={<DeleteTwoTone />}
                                     onClick={() => handleDeleteUser(item.id)}
@@ -95,7 +116,15 @@ export function AdminUserPage() {
                             icon={<UserOutlined />}
                             text={`Is Admin: ${item.is_staff}`}
                             key="download"
-                        />,
+                        >
+                            <Tooltip title="Change staff status">
+                                <Button
+                                    size="small"
+                                    icon={<RetweetOutlined />}
+                                    onClick={() => handleEditUser(item.id)}
+                                />
+                            </Tooltip>
+                        </IconText>,
                     ]}
                 >
                     <List.Item.Meta
@@ -107,7 +136,7 @@ export function AdminUserPage() {
                                 {item.username}
                             </Link>
                         }
-                        description={`full name: ${item.first_name}`}
+                        description={`Full name: ${item.first_name}`}
                     />
                 </List.Item>
             )}
