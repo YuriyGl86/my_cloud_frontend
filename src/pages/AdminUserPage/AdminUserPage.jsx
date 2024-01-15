@@ -67,8 +67,9 @@ export function AdminUserPage() {
         }
     };
 
-    const handleEditUser = async id => {
+    const handleEditUser = async (is_staff, id) => {
         const is_staff_new = is_staff ? false : true;
+        console.log(is_staff_new);
 
         try {
             await editUser({ token, id, body: { is_staff: is_staff_new } }).unwrap();
@@ -121,7 +122,7 @@ export function AdminUserPage() {
                                 <Button
                                     size="small"
                                     icon={<RetweetOutlined />}
-                                    onClick={() => handleEditUser(item.id)}
+                                    onClick={() => handleEditUser(item.is_staff, item.id)}
                                 />
                             </Tooltip>
                         </IconText>,
