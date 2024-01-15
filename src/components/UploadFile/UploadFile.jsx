@@ -12,6 +12,7 @@ export function UploadFile() {
 
     const [fileList, setFileList] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [formKey, setFormKey] = useState(1); // чтобы форма сбрасывалась при смене ключа после submit
 
     const onFinish = async ({ comment, rename }) => {
         const formData = new FormData();
@@ -24,6 +25,7 @@ export function UploadFile() {
             await sendFile({ token, body: formData }).unwrap();
             setFileList([]);
             message.success('upload successfully.');
+            setFormKey(prev => prev + 1);
         } catch (e) {
             console.log(e);
             message.error('upload failed.');
@@ -71,6 +73,7 @@ export function UploadFile() {
                 name="upload_file"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
+                key={formKey}
             >
                 <Form.Item
                     name="rename"

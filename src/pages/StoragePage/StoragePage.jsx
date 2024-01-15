@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { Space, Button, List, Tooltip, Typography } from 'antd';
@@ -129,7 +129,7 @@ export function StoragePage({ id }) {
                                 <Text
                                     copyable={{
                                         tooltips: ['copy file link', 'copied'],
-                                        text: `${item.file}`,
+                                        text: `${item.file_download_url}`,
                                         icon: [
                                             <Button
                                                 icon={
@@ -176,7 +176,11 @@ export function StoragePage({ id }) {
                             />,
                             <IconText
                                 icon={<CloudDownloadOutlined />}
-                                text={`Last download: ${item.id}`}
+                                text={
+                                    item.last_download
+                                        ? `Last download: ${item.last_download}`
+                                        : 'No downloads'
+                                }
                                 key="download"
                             />,
                         ]}
