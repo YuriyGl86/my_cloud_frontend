@@ -84,25 +84,26 @@ export function StoragePage({ id }) {
         }
     };
 
-    const handleDownloadFile = id => {
-        let filename = '';
+    const handleDownloadFile = (id, name) => {
+        // let filename = '';
         fetch(process.env.REACT_APP_BACKEND + `/api/v1/files/${id}/`, {
             headers: {
                 Authorization: `Token ${token}`,
             },
         })
             .then(response => {
-                filename = response.headers
-                    .get('Content-Disposition')
-                    .split(';')[1]
-                    .split('=')[1];
+                console.log(response.headers);
+                // filename = response.headers
+                //     .get('Content-Disposition')
+                //     .split(';')[1]
+                //     .split('=')[1];
                 return response.blob();
             })
             .then(blob => {
                 const url = window.URL.createObjectURL(new Blob([blob]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', filename);
+                link.setAttribute('download', name);
 
                 document.body.appendChild(link);
                 link.click();
@@ -154,7 +155,9 @@ export function StoragePage({ id }) {
                                                 style={{ color: 'rgb(22, 119, 255)' }}
                                             />
                                         }
-                                        onClick={() => handleDownloadFile(item.id)}
+                                        onClick={() =>
+                                            handleDownloadFile(item.id, item.name)
+                                        }
                                     />
                                 </Tooltip>
 

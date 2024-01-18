@@ -15,8 +15,14 @@ export function UploadFile() {
     const [formKey, setFormKey] = useState(1); // чтобы форма сбрасывалась при смене ключа после submit
 
     const onFinish = async ({ comment, rename }) => {
+        console.log(rename, comment);
         const formData = new FormData();
-        const data = { file: fileList[0], comment, rename };
+        const data = {
+            file: fileList[0],
+            ...(comment && { comment }),
+            ...(rename && { rename }),
+        };
+        console.log(data);
         for (const name in data) {
             formData.append(name, data[name]);
         }
@@ -80,6 +86,7 @@ export function UploadFile() {
                     rules={[
                         {
                             validator: (_, value) =>
+                                // eslint-disable-next-line
                                 (value && !!value.match(/^[^\\/:\*\?\"<>\|]+$/)) | !value
                                     ? Promise.resolve()
                                     : Promise.reject(
