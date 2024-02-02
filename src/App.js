@@ -7,6 +7,7 @@ import { LoginPage } from './pages/LoginPage/LoginPage';
 import { StoragePage } from './pages/StoragePage';
 import { AdminUserPage } from './pages/AdminUserPage';
 import { UserStoragePage } from './pages/UserStoragePage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/storage/" element={<StoragePage />} />
                 <Route path="/admin-users" element={<AdminUserPage />} />
                 <Route path="/storage/:id" element={<UserStoragePage />} />
+                <Route path="*" element={<NotFoundPage />} />
                 {/* <Route path="/contacts" element={<ContactsPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/catalog/:id" element={<CatalogItemPage />} />

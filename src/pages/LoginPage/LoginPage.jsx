@@ -25,7 +25,6 @@ export function LoginPage() {
         try {
             const token = await login(JSON.stringify(values)).unwrap();
             dispatch(userActions.setToken({ token: token.auth_token }));
-            console.log(token);
             setTokenReceived(token.auth_token);
             messageApi.open({
                 key,

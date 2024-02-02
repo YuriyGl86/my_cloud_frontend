@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Button, Input, message } from 'antd';
 import { useRegisterMutation } from '../../store/backendUserAPI';
 import { useNavigate } from 'react-router-dom';
+import { parsError } from '../../utils/errorParser';
 
 export function RegisterPage() {
     const [register] = useRegisterMutation();
@@ -10,8 +11,6 @@ export function RegisterPage() {
     const key = 'updatable';
 
     const handleSubmit = async values => {
-        console.log(values);
-
         try {
             await register(JSON.stringify(values)).unwrap();
             messageApi.open({
@@ -25,6 +24,17 @@ export function RegisterPage() {
             });
         } catch (e) {
             console.log(e);
+            const content =
+                e.status === 400
+                    ? `Ошибка при регистрации - ${parsError(e)}`
+                    : `Ошибка: ${e.error}`;
+
+            messageApi.open({
+                key,
+                duration: 4,
+                type: 'error',
+                content,
+            });
         }
     };
 
