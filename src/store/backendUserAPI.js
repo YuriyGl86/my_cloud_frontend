@@ -36,7 +36,7 @@ export const backendUserAPI = createApi({
         getUserInfo: builder.query({
             query: token => {
                 return {
-                    url: `/api/v1/auth/users/me`,
+                    url: `/api/v1/auth/users/me/`,
                     headers: { Authorization: `Token ${token}` },
                 };
             },
@@ -72,6 +72,7 @@ export const backendUserAPI = createApi({
                     headers: { Authorization: `Token ${token}` },
                 };
             },
+            transformResponse: responseData => responseData.sort((a, b) => a.id - b.id),
             providesTags: ['Users'],
         }),
         deleteFile: builder.mutation({
